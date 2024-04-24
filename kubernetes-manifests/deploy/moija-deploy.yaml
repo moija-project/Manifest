@@ -1,0 +1,37 @@
+## 디플로이먼트
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moija-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: moija-app
+  template:
+    metadata:
+      labels:
+        app: moija-app
+    spec:
+      containers:
+      - name: moija-cont
+        image: shinyenggwak/moija:cloud-0.5.8 # 나중에 이거 auto increment 할 수 있을까 고민해보자
+        imagePullPolicy: Always
+        ports:
+         - containerPort: 8090
+        env:
+            - name: DATASOURCE_URL ## 컨테이너 환경 변수명
+              valueFrom:
+                configMapKeyRef:
+                  name: env-config ## 컨피그맵명
+                  key: datasource_url ## 키 항목
+
+            - name: DATA_MONGODB_URL ## 컨테이너 환경 변수명
+              valueFrom:
+                configMapKeyRef:
+                  name: env-config
+                  key: data_mongodb_url
+
+
+
+
