@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis
+spec:                       ## 표2 스테이트풀셋 사양
+  serviceName: redis       ## 특징② 연결할 서비스의 이름 설정
+  replicas: 1               # 파드 기동 개수
+  selector:
+    matchLabels:
+      app: redis-sts
+  template:                 ## 표3 파드의 템플릿
+    metadata:
+      labels:
+        app: redis-sts
+    spec:
+      containers:           
+      - name: redis
+        image: redis:7.2.4
+        env:
+        - name: REDIS_PASSWORD
+          value: "3322"
+        - name: ALLOW_EMPTY_PASSWORD
+          value: "yes"
+        ports:
+          - containerPort: 6379
+            name: client
+          - containerPort: 16379
+            name: gossip
+        volumeMounts:       ## 특징③ 컨테이너상의 마운트 경로 설정 
+        - name: pvc
+          mountPath: /var/lib/redis
+          subPath: data     ## 초기화 시 빈 디렉터리가 필요
+        livenessProbe:      ## MySQL 기동 확인 
+          exec:
+            command: ["mysqladmin","-p$MYSQL_ROOT_PASSWORD","ping"]
+          initialDelaySeconds: 60
+          timeoutSeconds: 10
+  volumeClaimTemplates:     ## 특징④볼륨 요구 템플릿
+  - metadata:
+      name: pvc
+    spec:                   ## 표4 퍼시스턴트볼륨 요구 스펙
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: standard            # 용량 2Gi  Minikube/GKE
+      resources:
+        requests:
+          storage: 2Gi
