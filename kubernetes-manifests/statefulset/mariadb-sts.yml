@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mariadb
+spec:                       ## 표2 스테이트풀셋 사양
+  serviceName: mariadb        ## 특징② 연결할 서비스의 이름 설정
+  replicas: 1               # 파드 기동 개수
+  selector:
+    matchLabels:
+      app: mariadb-sts
+  template:                 ## 표3 파드의 템플릿
+    metadata:
+      labels:
+        app: mariadb-sts
+    spec:
+      containers:           
+      - name: mariadb
+        image: mariadb:11.2
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "3322"
+        ports:
+        - containerPort: 3306
+          name: mariadb
+        volumeMounts:
+        - name: pvc
+          mountPath: /var/lib/mariadb
+          subPath: data
+        livenessProbe:
+          exec:
+            command: ["mysqladmin","-p$MYSQL_ROOT_PASSWORD","ping"]
+          initialDelaySeconds: 60
+          timeoutSeconds: 10
+  volumeClaimTemplates:
+  - metadata:
+      name: pvc
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: standard
+      resources:
+        requests:
+          storage: 10Gi
