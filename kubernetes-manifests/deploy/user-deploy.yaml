@@ -41,5 +41,10 @@ spec:
                 configMapKeyRef:
                   name: env-config
                   key: my_url
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: secret
+                  name: jwt-token
 
 
