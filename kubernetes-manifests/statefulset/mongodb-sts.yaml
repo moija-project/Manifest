@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongodb
+spec:
+  serviceName: mongodb
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb-sts
+  template:
+    metadata:
+      labels:
+        app: mongodb-sts
+    spec:
+      containers:
+        - name: mongodb
+          image: mongo:7.0.4
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: "root"
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: "3322"
+            - name: MONGO_INITDB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: env-config ## 컨피그맵명
+                  key: database_name ## 키 항목
+          ports:
+            - containerPort: 27017
+              name: mongodb
+          volumeMounts:
+            - name: pvc
+              mountPath: /var/lib/mongodb
+              subPath: data
+          livenessProbe:
+            exec:
+              command: ["mongo", "--eval", "printjson(db.serverStatus())"]
+            initialDelaySeconds: 60
+            timeoutSeconds: 10
+  volumeClaimTemplates:
+    - metadata:
+        name: pvc
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: standard
+        resources:
+          requests:
+            storage: 4Gi
