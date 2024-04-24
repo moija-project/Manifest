@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ubuntu-pod
+spec:
+  containers:
+    - name: ubuntu
+      image: ubuntu:latest
+      command: [ "sleep", "infinity" ]
+  initContainers:
+    - name: install-curl
+      image: ubuntu:latest
+      command: [ "apt-get", "update", "-y" ]
+  restartPolicy: Never
+
