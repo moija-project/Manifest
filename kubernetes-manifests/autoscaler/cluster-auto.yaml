@@ -1,0 +1,6 @@
+apiVersion: autoscaling/v2
+kind: ClusterAutoscaler
+metadata:
+  name: cluster-autoscaler
+spec:
+  scaleDownUtilizationThreshold: 0.5
