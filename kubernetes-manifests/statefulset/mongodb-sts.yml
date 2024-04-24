@@ -2,13 +2,13 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: mongodb
-spec:                       ## 표2 스테이트풀셋 사양
-  serviceName: mongodb        ## 특징② 연결할 서비스의 이름 설정
-  replicas: 1               # 파드 기동 개수
+spec:
+  serviceName: mongodb
+  replicas: 1
   selector:
     matchLabels:
       app: mongodb-sts
-  template:                 ## 표3 파드의 템플릿
+  template:
     metadata:
       labels:
         app: mongodb-sts
@@ -29,21 +29,21 @@ spec:                       ## 표2 스테이트풀셋 사양
         ports:
         - containerPort: 27017
           name: mongodb
-        volumeMounts:       ## 특징③ 컨테이너상의 마운트 경로 설정 
+        volumeMounts:
         - name: pvc
           mountPath: /var/lib/mongodb
-          subPath: data     ## 초기화 시 빈 디렉터리가 필요
-        livenessProbe:      ## MySQL 기동 확인 
+          subPath: data
+        livenessProbe:
           exec:
-            command: ["mysqladmin","-p$MYSQL_ROOT_PASSWORD","ping"]
+            command: ["mongo", "--eval", "printjson(db.serverStatus())"]
           initialDelaySeconds: 60
           timeoutSeconds: 10
-  volumeClaimTemplates:     ## 특징④볼륨 요구 템플릿
+  volumeClaimTemplates:
   - metadata:
       name: pvc
-    spec:                   ## 표4 퍼시스턴트볼륨 요구 스펙
+    spec:
       accessModes: [ "ReadWriteOnce" ]
-      storageClassName: standard            # 용량 2Gi  Minikube/GKE
+      storageClassName: standard
       resources:
         requests:
           storage: 2Gi
