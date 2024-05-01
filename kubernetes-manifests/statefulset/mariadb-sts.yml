@@ -18,7 +18,10 @@ spec:                       ## 표2 스테이트풀셋 사양
         image: mariadb:11.2
         env:
         - name: MYSQL_ROOT_PASSWORD
-          value: "3322"
+          valueFrom:
+            secretKeyRef:
+              key: datasource_password
+              name: db-credentials
         ports:
         - containerPort: 3306
           name: mariadb
@@ -28,7 +31,7 @@ spec:                       ## 표2 스테이트풀셋 사양
           subPath: data
         livenessProbe:
           exec:
-            command: ["mysqladmin","-p$MYSQL_ROOT_PASSWORD","ping"]
+            command: ["mariadb","-uroot","-p$MYSQL_ROOT_PASSWORD","moija"]
           initialDelaySeconds: 60
           timeoutSeconds: 10
   volumeClaimTemplates:
