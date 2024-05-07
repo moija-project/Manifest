@@ -15,4 +15,11 @@ spec:
                 name: user-service
                 port:
                   number: 80
+          - path: /message/
+            pathType: Prefix
+            backend:
+              service:
+                name: chat-service
+                port:
+                  number: 80
 
