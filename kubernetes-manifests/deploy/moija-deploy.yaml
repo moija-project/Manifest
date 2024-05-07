@@ -31,6 +31,16 @@ spec:
                 configMapKeyRef:
                   name: env-config
                   key: data_mongodb_url
+            - name: DATANAME
+              valueFrom:
+                secretKeyRef:
+                  key: datasource_root_username
+                  name: db-credentials
+            - name: DATAPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: datasource_password
+                  name: db-credentials
 
 
 

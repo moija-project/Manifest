@@ -15,36 +15,54 @@ spec:
     spec:
       containers:
       - name: usercont
-        image: shinyenggwak/moija-auth:cloud-0.4.1
+        image: shinyenggwak/moija-auth:cloud-0.4.5
         imagePullPolicy: Always
         ports:
          - containerPort: 8088
+        envFrom:
+          - configMapRef:
+              name: pod-alias
         env:
             - name: DATASOURCE_URL ## 컨테이너 환경 변수명
               valueFrom:
                 configMapKeyRef:
                   name: env-config ## 컨피그맵명
                   key: datasource_url ## 키 항목
-            - name: REDIS_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: env-config
-                  key: redis_url
-
-            - name: MOIJA_POST_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: env-config
-                  key: post_url
-            - name: MOIJA_MY_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: env-config
-                  key: my_url
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
                   key: secret
                   name: jwt-token
+            - name: EMIAL_ENCODE
+              valueFrom:
+                secretKeyRef:
+                  key: encode-key
+                  name: email-key
+            - name: DATANAME
+              valueFrom:
+                secretKeyRef:
+                  key: datasource_root_username
+                  name: db-credentials
+            - name: DATAPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: datasource_password
+                  name: db-credentials
 
+            - name: SECU_PW
+              valueFrom:
+                secretKeyRef:
+                  key: security_password
+                  name: db-credentials
+            - name: EMAIL_PW
+              valueFrom:
+                secretKeyRef:
+                  key: mail_password
+                  name: db-credentials
+
+            - name: DOMAIN_NAME
+              valueFrom:
+                configMapKeyRef:
+                  key: domain_name
+                  name: env-config
 
