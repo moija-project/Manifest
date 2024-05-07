@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rabbit
+spec:
+  serviceName: rabbit
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbit-sts
+  template:
+    metadata:
+      labels:
+        app: rabbit-sts
+    spec:
+      containers:           
+      - name: rabbit
+        image: rabbitmq:latest
+#        command: ["sh", "-c"]
+#        args: ["rabbitmqctl", "add_user","$RABBITMQ_ID","$RABBITMQ_PASSWORD","administrator"]
+        ports:
+          - containerPort: 5672
+            name: basic
+          - containerPort: 15672
+            name: web
+          - containerPort: 61613
+            name: stomp
+        envFrom:
+          - secretRef:
+              name: rabbit-cred
+        volumeMounts:
+        - name: rabbit-pvc
+          mountPath: /var/lib/rabbitmq
+          subPath: data
+        livenessProbe:
+          exec:
+            command: ["rabbitmqctl","status"]
+          initialDelaySeconds: 60
+          timeoutSeconds: 10
+  volumeClaimTemplates:
+  - metadata:
+      name: rabbit-pvc
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: standard
+      resources:
+        requests:
+          storage: 2Gi
