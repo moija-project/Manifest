@@ -27,11 +27,11 @@ spec:                       ## 표2 스테이트풀셋 사양
           name: mariadb
         volumeMounts:
         - name: pvc
-          mountPath: /var/lib/mariadb
+          mountPath: /var/lib/mysql
           subPath: data
         livenessProbe:
           exec:
-            command: ["mariadb","-uroot","-p$MYSQL_ROOT_PASSWORD","moija"]
+            command: ["healthcheck.sh", "--su-mysql", "--connect", "--innodb_initialized"]
           initialDelaySeconds: 60
           timeoutSeconds: 10
   volumeClaimTemplates:
@@ -42,4 +42,4 @@ spec:                       ## 표2 스테이트풀셋 사양
       storageClassName: standard
       resources:
         requests:
-          storage: 10Gi
+          storage: 4Gi

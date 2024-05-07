@@ -27,20 +27,20 @@ spec:                       ## 표2 스테이트풀셋 사양
           - containerPort: 16379
             name: gossip
         volumeMounts:       ## 특징③ 컨테이너상의 마운트 경로 설정 
-        - name: pvc
-          mountPath: /var/lib/redis
+        - name: redis-pvc
+          mountPath: /data
           subPath: data     ## 초기화 시 빈 디렉터리가 필요
         livenessProbe:      ## MySQL 기동 확인 
           exec:
-            command: ["mysqladmin","-p$MYSQL_ROOT_PASSWORD","ping"]
+            command: ["sh","-c","redis-cli -a {{ .Values.app.env.REDIS_PASSWORD }} ping"]
           initialDelaySeconds: 60
           timeoutSeconds: 10
-  volumeClaimTemplates:     ## 특징④볼륨 요구 템플릿
+  volumeClaimTemplates:
   - metadata:
-      name: pvc
-    spec:                   ## 표4 퍼시스턴트볼륨 요구 스펙
+      name: redis-pvc
+    spec:
       accessModes: [ "ReadWriteOnce" ]
-      storageClassName: standard            # 용량 2Gi  Minikube/GKE
+      storageClassName: standard
       resources:
         requests:
           storage: 2Gi
