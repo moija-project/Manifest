@@ -1,0 +1,42 @@
+## 디플로이먼트
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chat-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chat-app
+  template:
+    metadata:
+      labels:
+        app: chat-app
+    spec:
+      containers:
+      - name: chat-cont
+        image: shinyenggwak/chat-moija:cloud-0.0.8 # 나중에 이거 auto increment 할 수 있을까 고민해보자
+        imagePullPolicy: Always
+        ports:
+         - containerPort: 8093
+        env:
+            - name: DATA_MONGODB_URL ## 컨테이너 환경 변수명
+              valueFrom:
+                configMapKeyRef:
+                  name: env-config
+                  key: data_mongodb_url
+            - name: DATANAME
+              valueFrom:
+                secretKeyRef:
+                  key: datasource_root_username
+                  name: db-credentials
+            - name: DATAPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: datasource_password
+                  name: db-credentials
+        envFrom:
+          - secretRef:
+              name: rabbit-cred
+
+
