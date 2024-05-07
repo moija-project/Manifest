@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbit-headless
+  labels:
+    app: rabbit-headless
+spec:
+  ports:
+    - port: 5672
+      targetPort: 5672
+      protocol: "TCP"
+      name: basic
+    - port: 15672
+      targetPort: 15672
+      name: web
+    - port: 61613
+      targetPort: 61613
+      name: stomp
+  clusterIP: None
+  selector:
+    app: rabbit-sts
