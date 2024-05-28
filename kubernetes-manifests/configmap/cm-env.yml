@@ -6,7 +6,4 @@ data:
   datasource_url : jdbc:mariadb://maria-svc-headless.default.svc.cluster.local:3306/moija?characterEncoding=UTF-8&ServerTimezone=UTC
   data_mongodb_url : mongodb://root:3322@mongo-svc-headless.default.svc.cluster.local:27017/moija?authSource=admin&authMechanism=SCRAM-SHA-1
   database_name : moija
-  #사실 url이아니라 host가 맞는 표현이지만 귀찮아서 일단 놔둠
-  redis_url : 10.0.10.134
-  post_url : moija-service
-  my_url : moija-service
+  domain_name : mo.ija.kro.kr

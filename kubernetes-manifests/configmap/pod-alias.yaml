@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pod-alias
+data:
+  #사실 url이아니라 host가 맞는 표현이지만 귀찮아서 일단 놔둠
+  REDIS_URL: 10.0.10.134
+  MOIJA_POST_URL: moija-service
+  MOIJA_MY_URL: moija-service
+  MOIJA_CHAT_URL: chat-service
