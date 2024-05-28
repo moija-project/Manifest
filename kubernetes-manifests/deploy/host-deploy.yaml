@@ -17,7 +17,7 @@ spec:
         kubernetes.io/arch: amd64
       containers:
         - name: hostcont
-          image: shinyenggwak/front:cloud-0.0.3
+          image: shinyenggwak/front
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
