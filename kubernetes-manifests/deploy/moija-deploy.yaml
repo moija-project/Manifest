@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: moija-cont
-        image: shinyenggwak/moija:cloud-0.5.8 # 나중에 이거 auto increment 할 수 있을까 고민해보자
+        image: shinyenggwak/moija:cloud-0.5.9 # 나중에 이거 auto increment 할 수 있을까 고민해보자
         imagePullPolicy: Always
         ports:
          - containerPort: 8090

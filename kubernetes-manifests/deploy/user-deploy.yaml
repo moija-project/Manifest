@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: usercont
-        image: shinyenggwak/moija-auth:cloud-0.4.5
+        image: shinyenggwak/moija-auth:cloud-0.5.1
         imagePullPolicy: Always
         ports:
          - containerPort: 8088

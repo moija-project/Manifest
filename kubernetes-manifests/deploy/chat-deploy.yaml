@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: chat-cont
-        image: shinyenggwak/chat-moija:cloud-0.0.8 # 나중에 이거 auto increment 할 수 있을까 고민해보자
+        image: shinyenggwak/chat-moija:cloud-0.2.0 # 나중에 이거 auto increment 할 수 있을까 고민해보자
         imagePullPolicy: Always
         ports:
          - containerPort: 8093
