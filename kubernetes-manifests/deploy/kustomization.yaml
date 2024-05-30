@@ -4,4 +4,4 @@ resources:
 - host-deploy.yaml
 images:
 - name: shinyenggwak/moija-front
-  newTag: v1.0.0
+  newTag: v1.0.3
